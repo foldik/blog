@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  kadmin:
+    image: kerberos_base:1
+    hostname: kerberosadmin.example.org
+    entrypoint: [ "kadmind", "-nofork" ]
+    volumes:
+      - /dev/urandom:/dev/random
+      - ./config/kerberos/krb5.conf:/etc/krb5.conf
+      - ./config/kerberos/kdc.conf:/etc/krb5kdc/kdc.conf
+      - ./config/kerberos/kadm5.acl:/etc/krb5kdc/kadm5.acl
+      - ./data/db:/var/lib/krb5kdc
+      - ./data/.k5.EXAMPLE.ORG:/etc/krb5kdc/.k5.EXAMPLE.ORG
+  kdc:
+    image: kerberos_base:1
+    hostname: kdc.example.org
+    entrypoint: [ "krb5kdc", "-n" ]
+    volumes:
+      - /dev/urandom:/dev/random
+      - ./config/kerberos/krb5.conf:/etc/krb5.conf
+      - ./config/kerberos/kdc.conf:/etc/krb5kdc/kdc.conf
+      - ./config/kerberos/kadm5.acl:/etc/krb5kdc/kadm5.acl
+      - ./data/db:/var/lib/krb5kdc
+      - ./data/.k5.EXAMPLE.ORG:/etc/krb5kdc/.k5.EXAMPLE.ORG
